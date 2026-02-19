@@ -1,0 +1,143 @@
+.song-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  transition: background var(--transition);
+}
+.song-card:hover { background: var(--card-hover); }
+
+.song-card--first {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), inset 0 0 0 1px var(--primary-glow);
+}
+
+/* Drag handle */
+.drag-handle {
+  color: var(--text-muted);
+  cursor: grab;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0.4;
+  transition: opacity var(--transition);
+}
+.drag-handle:hover { opacity: 1; }
+.drag-handle:active { cursor: grabbing; }
+
+/* Thumbnail */
+.song-thumb {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+.song-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.song-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+}
+
+.now-playing-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 1px 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Info */
+.song-info {
+  flex: 1;
+  min-width: 0;
+}
+.song-title {
+  font-weight: 500;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.song-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.song-duration::before { content: '·'; margin-right: 4px; }
+.song-added { margin-top: 2px; }
+.song-added-name { color: var(--primary); }
+
+/* Actions */
+.song-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Vote group */
+.vote-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.vote-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: var(--transition);
+  line-height: 1;
+}
+.vote-btn:hover { background: var(--surface); }
+.vote-up.active { color: var(--success); }
+.vote-down.active { color: var(--danger); }
+
+.vote-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.vote-count.pos { color: var(--success); }
+.vote-count.neg { color: var(--danger); }
+
+/* Play btn */
+.play-btn {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  color: var(--success);
+  border-color: rgba(74,222,128,0.3);
+}
+.play-btn:hover { background: rgba(74,222,128,0.1); }
+
+/* YouTube link */
+.yt-link { color: #ff4444; }
+.yt-link:hover { color: #ff6666; background: rgba(255,68,68,0.1); }
+
+/* Delete */
+.delete-btn:hover { color: var(--danger); background: rgba(255,77,109,0.1); }

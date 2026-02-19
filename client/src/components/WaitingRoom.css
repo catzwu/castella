@@ -1,0 +1,30 @@
+.waiting-room {}
+
+.waiting-info {
+  margin-bottom: 14px;
+}
+
+.waiting-song-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vote-progress {
+  height: 2px;
+  background: var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  overflow: hidden;
+}
+
+.vote-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.4s ease;
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
