@@ -1,0 +1,87 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-section {
+  padding: 20px;
+}
+
+.settings-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-value {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.threshold-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.threshold-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--primary-glow);
+}
+
+.threshold-value {
+  min-width: 28px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
+.settings-section .btn { margin-top: 14px; }
+
+/* Coming soon */
+.coming-soon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.coming-soon-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0.6;
+}
+.coming-soon-icon {
+  font-size: 1rem;
+  margin-top: 1px;
+  color: var(--primary);
+}
