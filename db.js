@@ -12,7 +12,8 @@ db.exec(`
     join_code TEXT UNIQUE NOT NULL,
     created_at INTEGER NOT NULL,
     expires_at INTEGER NOT NULL,
-    upvote_threshold INTEGER DEFAULT 3
+    upvote_threshold INTEGER DEFAULT 3,
+    waiting_room_enabled INTEGER DEFAULT 0
   );
 
   CREATE TABLE IF NOT EXISTS songs (
@@ -47,6 +48,11 @@ function cleanupExpiredRooms() {
   db.prepare('DELETE FROM rooms WHERE expires_at < ?').run(now);
 }
 
+// Migration: add waiting_room_enabled for existing databases
+try {
+  db.exec('ALTER TABLE rooms ADD COLUMN waiting_room_enabled INTEGER DEFAULT 0');
+} catch {}
+
 cleanupExpiredRooms();
 setInterval(cleanupExpiredRooms, 60 * 60 * 1000);
 
@@ -65,9 +71,20 @@ function getRoom(joinCode) {
     .get(joinCode, Date.now());
 }
 
-function updateRoomSettings(joinCode, upvoteThreshold) {
-  return db.prepare('UPDATE rooms SET upvote_threshold = ? WHERE join_code = ?')
-    .run(upvoteThreshold, joinCode);
+function updateRoomSettings(joinCode, { upvoteThreshold, waitingRoomEnabled } = {}) {
+  const sets = [];
+  const params = [];
+  if (upvoteThreshold != null) {
+    sets.push('upvote_threshold = ?');
+    params.push(Number(upvoteThreshold));
+  }
+  if (waitingRoomEnabled != null) {
+    sets.push('waiting_room_enabled = ?');
+    params.push(waitingRoomEnabled ? 1 : 0);
+  }
+  if (sets.length === 0) return;
+  params.push(joinCode);
+  return db.prepare(`UPDATE rooms SET ${sets.join(', ')} WHERE join_code = ?`).run(...params);
 }
 
 // --- Songs ---

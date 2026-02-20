@@ -47,6 +47,7 @@ function sanitizeRoom(room) {
   return {
     joinCode: room.join_code,
     upvoteThreshold: room.upvote_threshold,
+    waitingRoomEnabled: room.waiting_room_enabled === 1,
     expiresAt: room.expires_at,
   };
 }
@@ -78,10 +79,11 @@ app.get('/api/rooms/:joinCode', (req, res) => {
 app.patch('/api/rooms/:joinCode/settings', (req, res) => {
   const room = db.getRoom(req.params.joinCode.toUpperCase());
   if (!room) return res.status(404).json({ error: 'Room not found' });
-  const { upvoteThreshold } = req.body;
-  if (typeof upvoteThreshold === 'number' && upvoteThreshold >= 1) {
-    db.updateRoomSettings(room.join_code, upvoteThreshold);
-  }
+  const { upvoteThreshold, waitingRoomEnabled } = req.body;
+  const updates = {};
+  if (typeof upvoteThreshold === 'number' && upvoteThreshold >= 1) updates.upvoteThreshold = upvoteThreshold;
+  if (typeof waitingRoomEnabled === 'boolean') updates.waitingRoomEnabled = waitingRoomEnabled;
+  if (Object.keys(updates).length > 0) db.updateRoomSettings(room.join_code, updates);
   broadcastRoom(room.join_code);
   res.json({ ok: true });
 });
@@ -102,10 +104,13 @@ app.post('/api/rooms/:joinCode/songs', (req, res) => {
   if (!title || !artist || !addedBy || !addedById) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+  // Server enforces waiting room regardless of what client sends
+  const effectiveStatus = room.waiting_room_enabled === 1 ? 'waiting'
+    : (status === 'waiting' ? 'waiting' : 'queued');
   db.addSong(room.id, {
     title, artist, duration, thumbnail, sourceUrl,
     addedBy, addedById,
-    status: status === 'waiting' ? 'waiting' : 'queued',
+    status: effectiveStatus,
   });
   broadcastSongs(room.join_code, addedById);
   res.json({ ok: true });

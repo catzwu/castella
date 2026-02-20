@@ -115,3 +115,22 @@
   height: 12px;
   border-width: 2px;
 }
+
+@media (max-width: 600px) {
+  /* Bottom sheet on mobile — easier to reach with thumbs */
+  .search-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .search-modal {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  /* Larger tap targets for add/queue buttons in results */
+  .result-actions .btn-sm {
+    padding: 7px 12px;
+  }
+}

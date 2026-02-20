@@ -100,3 +100,19 @@
 .home-footer {
   text-align: center;
 }
+
+@media (max-width: 400px) {
+  .home-page {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  .home-card {
+    padding: 20px 16px;
+  }
+
+  .logo-text,
+  .logo-icon {
+    font-size: 2rem;
+  }
+}
