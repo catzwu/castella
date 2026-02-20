@@ -46,22 +46,23 @@ export default function SongCard({
         {isFirst && <div className="now-playing-badge">Now</div>}
       </div>
 
-      {/* Info */}
-      <div className="song-info">
-        <div className="song-title">{song.title}</div>
-        <div className="song-meta">
-          <span className="text-muted text-sm">{song.artist}</span>
-          {song.duration && (
-            <span className="song-duration text-muted text-xs">{formatDuration(song.duration)}</span>
-          )}
+      {/* Info + Actions wrapper */}
+      <div className="song-body">
+        <div className="song-info">
+          <div className="song-title">{song.title}</div>
+          <div className="song-meta">
+            <span className="text-muted text-sm">{song.artist}</span>
+            {song.duration && (
+              <span className="song-duration text-muted text-xs">{formatDuration(song.duration)}</span>
+            )}
+          </div>
+          <div className="song-added text-xs text-muted">
+            Added by <span className="song-added-name">{song.added_by}</span>
+          </div>
         </div>
-        <div className="song-added text-xs text-muted">
-          Added by <span className="song-added-name">{song.added_by}</span>
-        </div>
-      </div>
 
-      {/* Actions */}
-      <div className="song-actions">
+        {/* Actions */}
+        <div className="song-actions">
         {/* Votes */}
         <div className="vote-group">
           <button
@@ -120,6 +121,7 @@ export default function SongCard({
         <button className="btn-icon delete-btn" onClick={() => onDelete(song.id)} title="Remove">
           ✕
         </button>
+      </div>
       </div>
     </div>
   );

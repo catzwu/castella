@@ -136,6 +136,24 @@ function promoteToQueue(songId, roomId) {
   ).run(maxOrder + 1, songId, roomId);
 }
 
+function promoteAllWaitingToQueue(roomId) {
+  const maxOrder = db.prepare(
+    "SELECT COALESCE(MAX(queue_order), 0) FROM songs WHERE room_id = ? AND status = 'queued'"
+  ).pluck().get(roomId);
+  const waitingSongs = db.prepare(
+    "SELECT id FROM songs WHERE room_id = ? AND status = 'waiting' ORDER BY queue_order ASC, created_at ASC"
+  ).all(roomId);
+  const update = db.prepare(
+    "UPDATE songs SET status = 'queued', queue_order = ? WHERE id = ?"
+  );
+  const tx = db.transaction(() => {
+    waitingSongs.forEach((song, i) => {
+      update.run(maxOrder + i + 1, song.id);
+    });
+  });
+  tx();
+}
+
 function reorderQueue(roomId, orderedIds) {
   const update = db.prepare('UPDATE songs SET queue_order = ? WHERE id = ? AND room_id = ?');
   const tx = db.transaction((ids) => {
@@ -174,6 +192,6 @@ function vote(songId, userId, voteType) {
 
 module.exports = {
   getRoom, createRoom, updateRoomSettings,
-  getSongs, addSong, deleteSong, markPlayed, promoteToQueue, reorderQueue,
+  getSongs, addSong, deleteSong, markPlayed, promoteToQueue, promoteAllWaitingToQueue, reorderQueue,
   vote,
 };

@@ -65,6 +65,15 @@
   text-transform: uppercase;
 }
 
+/* Body: info + actions wrapper */
+.song-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 /* Info */
 .song-info {
   flex: 1;
@@ -145,18 +154,38 @@
 @media (max-width: 600px) {
   .song-card {
     padding: 10px 12px;
-    gap: 10px;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* Stack info above actions on mobile */
+  .song-body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .song-info {
+    width: 100%;
+  }
+
+  .song-actions {
+    width: 100%;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* Push YouTube link to the right, delete follows naturally */
+  .yt-link {
+    margin-left: auto;
   }
 
   /* Larger tap targets for vote buttons */
   .vote-btn {
     padding: 6px 10px;
-    font-size: 0.72rem;
-    min-height: 30px;
-  }
-
-  .song-actions {
-    gap: 4px;
+    font-size: 0.75rem;
+    min-height: 32px;
   }
 
   /* Ensure icon buttons are tappable */
