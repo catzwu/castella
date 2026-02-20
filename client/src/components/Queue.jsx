@@ -18,6 +18,74 @@ import { CSS } from '@dnd-kit/utilities';
 import SongCard from './SongCard.jsx';
 import './Queue.css';
 
+function getEmbedUrl(url) {
+  if (!url) return null;
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  const spMatch = url.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
+  if (spMatch) return `https://open.spotify.com/embed/${spMatch[1]}/${spMatch[2]}`;
+  return null;
+}
+
+function PlayingNow({ song, onMarkPlayed }) {
+  const [inputVal, setInputVal] = useState('');
+  const embedUrl = getEmbedUrl(inputVal);
+  const isSpotify = inputVal.includes('spotify');
+
+  function handleMarkPlayed() {
+    onMarkPlayed(song.id);
+    setInputVal('');
+  }
+
+  return (
+    <div className="playing-now-section">
+      <div className="playing-now-header">
+        <span className="playing-now-dot" />
+        <span className="playing-now-label">Playing Now</span>
+      </div>
+      <div className="playing-now-song">
+        {song.thumbnail && (
+          <img className="playing-now-thumb" src={song.thumbnail} alt="" draggable={false} />
+        )}
+        <div className="playing-now-info">
+          <div className="playing-now-title">{song.title}</div>
+          <div className="playing-now-artist text-sm text-muted">{song.artist}</div>
+          <div className="text-xs text-muted">Added by {song.added_by}</div>
+        </div>
+        {onMarkPlayed && (
+          <button className="btn btn-ghost btn-sm" onClick={handleMarkPlayed}>
+            ✓ Played
+          </button>
+        )}
+      </div>
+      <div className="playing-now-embed-row">
+        <input
+          className="playing-now-input"
+          placeholder="Paste a YouTube or Spotify URL to embed..."
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+        />
+        {inputVal && (
+          <button className="btn-icon" onClick={() => setInputVal('')} title="Clear">✕</button>
+        )}
+      </div>
+      {embedUrl && (
+        <div className={`playing-now-embed ${isSpotify ? 'embed-spotify' : 'embed-youtube'}`}>
+          <iframe
+            src={embedUrl}
+            title="Now playing embed"
+            width="100%"
+            height={isSpotify ? '152' : '100%'}
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SortableSong({ song, userId, onVote, onDelete, onMarkPlayed, isFirst }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: song.id });
 
@@ -78,6 +146,8 @@ export default function Queue({ songs, userId, onVote, onDelete, onMarkPlayed, o
 
   return (
     <div className="queue">
+      <PlayingNow song={items[0]} onMarkPlayed={onMarkPlayed} />
+      <div className="queue-up-next-label text-sm text-muted">Up Next</div>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={items.map(s => s.id)} strategy={verticalListSortingStrategy}>
           <div className="song-list">
