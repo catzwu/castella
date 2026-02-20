@@ -7,8 +7,6 @@ import SongSearch from './SongSearch.jsx';
 import Settings from './Settings.jsx';
 import './Room.css';
 
-const TABS = ['Queue', 'Waiting', 'Played', 'Settings'];
-
 export default function Room({ joinCode, username, userId, onLeave }) {
   const [tab, setTab] = useState('Queue');
   const [songs, setSongs] = useState([]);
@@ -127,6 +125,16 @@ export default function Room({ joinCode, username, userId, onLeave }) {
     } catch { showToast('Failed to save settings'); }
   }
 
+  const waitingRoomEnabled = roomInfo?.waitingRoomEnabled ?? false;
+  const tabs = waitingRoomEnabled
+    ? ['Queue', 'Waiting', 'Played', 'Settings']
+    : ['Queue', 'Played', 'Settings'];
+
+  // If waiting room gets disabled while user is on the Waiting tab, switch to Queue
+  useEffect(() => {
+    if (!waitingRoomEnabled && tab === 'Waiting') setTab('Queue');
+  }, [waitingRoomEnabled]);
+
   const queued = songs.filter(s => s.status === 'queued');
   const waiting = songs.filter(s => s.status === 'waiting');
   const played = songs.filter(s => s.status === 'played');
@@ -161,7 +169,7 @@ export default function Room({ joinCode, username, userId, onLeave }) {
           {/* Tabs */}
           <div className="room-tabs-row">
             <div className="tabs">
-              {TABS.map(t => (
+              {tabs.map(t => (
                 <button
                   key={t}
                   className={`tab-btn ${tab === t ? 'active' : ''}`}
@@ -216,7 +224,7 @@ export default function Room({ joinCode, username, userId, onLeave }) {
         <SongSearch
           onAdd={addSong}
           onClose={() => setSearchOpen(false)}
-          hasWaitingRoom={true}
+          waitingRoomEnabled={waitingRoomEnabled}
         />
       )}
 

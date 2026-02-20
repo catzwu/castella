@@ -3,16 +3,18 @@ import './Settings.css';
 
 export default function Settings({ roomInfo, onSave }) {
   const [threshold, setThreshold] = useState(roomInfo?.upvoteThreshold ?? 3);
+  const [waitingRoomEnabled, setWaitingRoomEnabled] = useState(roomInfo?.waitingRoomEnabled ?? false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (roomInfo?.upvoteThreshold != null) setThreshold(roomInfo.upvoteThreshold);
-  }, [roomInfo?.upvoteThreshold]);
+    if (roomInfo?.waitingRoomEnabled != null) setWaitingRoomEnabled(roomInfo.waitingRoomEnabled);
+  }, [roomInfo?.upvoteThreshold, roomInfo?.waitingRoomEnabled]);
 
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    await onSave({ upvoteThreshold: Number(threshold) });
+    await onSave({ upvoteThreshold: Number(threshold), waitingRoomEnabled });
     setSaving(false);
   }
 
@@ -41,23 +43,40 @@ export default function Settings({ roomInfo, onSave }) {
 
       <form onSubmit={handleSave} className="settings-section card">
         <h3 className="settings-title">Waiting Room</h3>
-        <p className="text-sm text-muted" style={{ marginBottom: 14 }}>
-          Songs in the waiting room are automatically promoted to the queue when they reach the upvote threshold.
-        </p>
-        <div className="input-group">
-          <label>Upvote threshold to auto-promote</label>
-          <div className="threshold-row">
-            <input
-              type="range"
-              min="1"
-              max="20"
-              value={threshold}
-              onChange={e => setThreshold(e.target.value)}
-              className="threshold-slider"
-            />
-            <span className="threshold-value">{threshold}</span>
+        <div className="settings-toggle-row">
+          <div>
+            <div className="text-sm">Enforce Waiting Room</div>
+            <div className="text-xs text-muted" style={{ marginTop: 2 }}>
+              {waitingRoomEnabled
+                ? 'All songs go to the waiting room and must be voted up to join the queue'
+                : 'Songs are added directly to the queue'}
+            </div>
           </div>
+          <label className="toggle">
+            <input
+              type="checkbox"
+              checked={waitingRoomEnabled}
+              onChange={e => setWaitingRoomEnabled(e.target.checked)}
+            />
+            <span className="toggle-track" />
+          </label>
         </div>
+        {waitingRoomEnabled && (
+          <div className="input-group" style={{ marginTop: 14 }}>
+            <label>Upvote threshold to auto-promote</label>
+            <div className="threshold-row">
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={threshold}
+                onChange={e => setThreshold(e.target.value)}
+                className="threshold-slider"
+              />
+              <span className="threshold-value">{threshold}</span>
+            </div>
+          </div>
+        )}
         <button type="submit" className="btn btn-primary" disabled={saving}>
           {saving ? <span className="spinner" /> : 'Save Settings'}
         </button>

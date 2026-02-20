@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './SongSearch.css';
 
-export default function SongSearch({ onAdd, onClose, hasWaitingRoom }) {
+export default function SongSearch({ onAdd, onClose, waitingRoomEnabled }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -104,20 +104,21 @@ export default function SongSearch({ onAdd, onClose, hasWaitingRoom }) {
                 </div>
               </div>
               <div className="result-actions">
-                <button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => handleAdd(track, 'queued')}
-                  disabled={addingId === `${track.trackId}-queued`}
-                >
-                  {addingId === `${track.trackId}-queued` ? <span className="spinner spinner-sm" /> : '+ Queue'}
-                </button>
-                {hasWaitingRoom && (
+                {waitingRoomEnabled ? (
                   <button
-                    className="btn btn-ghost btn-sm"
+                    className="btn btn-primary btn-sm"
                     onClick={() => handleAdd(track, 'waiting')}
                     disabled={addingId === `${track.trackId}-waiting`}
                   >
-                    {addingId === `${track.trackId}-waiting` ? <span className="spinner spinner-sm" /> : '+ Wait'}
+                    {addingId === `${track.trackId}-waiting` ? <span className="spinner spinner-sm" /> : '+ Waiting'}
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleAdd(track, 'queued')}
+                    disabled={addingId === `${track.trackId}-queued`}
+                  >
+                    {addingId === `${track.trackId}-queued` ? <span className="spinner spinner-sm" /> : '+ Queue'}
                   </button>
                 )}
               </div>
