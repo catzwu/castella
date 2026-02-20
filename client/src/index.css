@@ -40,6 +40,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  touch-action: manipulation; /* faster tap, no double-tap zoom on mobile */
 }
 
 input {
@@ -232,4 +233,18 @@ input {
 /* ─── Drag ghost ─────────────────────────────────────────────── */
 .dragging {
   opacity: 0.5;
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .title-xl { font-size: 1.8rem; }
+  .title-lg  { font-size: 1.3rem; }
+
+  .container { padding: 0 16px; }
+
+  .tab-btn {
+    padding: 7px 8px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
 }

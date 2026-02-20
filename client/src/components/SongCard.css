@@ -141,3 +141,26 @@
 
 /* Delete */
 .delete-btn:hover { color: var(--danger); background: rgba(255,77,109,0.1); }
+
+@media (max-width: 600px) {
+  .song-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  /* Larger tap targets for vote buttons */
+  .vote-btn {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    min-height: 30px;
+  }
+
+  .song-actions {
+    gap: 4px;
+  }
+
+  /* Ensure icon buttons are tappable */
+  .btn-icon {
+    padding: 9px;
+  }
+}

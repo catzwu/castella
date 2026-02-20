@@ -91,3 +91,24 @@
   flex: 1;
   min-width: 0;
 }
+
+@media (max-width: 480px) {
+  /* Hide "castella" wordmark, keep room code visible */
+  .logo-small {
+    display: none;
+  }
+
+  .room-code {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+  }
+
+  .room-code-btn {
+    padding: 5px 10px;
+  }
+
+  .room-tabs-row {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+}
