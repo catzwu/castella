@@ -80,11 +80,21 @@ app.patch('/api/rooms/:joinCode/settings', (req, res) => {
   const room = db.getRoom(req.params.joinCode.toUpperCase());
   if (!room) return res.status(404).json({ error: 'Room not found' });
   const { upvoteThreshold, waitingRoomEnabled } = req.body;
+
+  // Detect if waiting room is being toggled off
+  const wasEnabled = room.waiting_room_enabled === 1;
+  const isBeingDisabled = typeof waitingRoomEnabled === 'boolean' && !waitingRoomEnabled && wasEnabled;
+
   const updates = {};
   if (typeof upvoteThreshold === 'number' && upvoteThreshold >= 1) updates.upvoteThreshold = upvoteThreshold;
   if (typeof waitingRoomEnabled === 'boolean') updates.waitingRoomEnabled = waitingRoomEnabled;
   if (Object.keys(updates).length > 0) db.updateRoomSettings(room.join_code, updates);
+
+  // Move any waiting songs to the bottom of the queue
+  if (isBeingDisabled) db.promoteAllWaitingToQueue(room.id);
+
   broadcastRoom(room.join_code);
+  broadcastSongs(room.join_code, '');
   res.json({ ok: true });
 });
 
