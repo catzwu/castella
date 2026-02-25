@@ -24,7 +24,7 @@ export default function SongSearch({ onAdd, onClose, waitingRoomEnabled }) {
   async function search(term) {
     setLoading(true);
     try {
-      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=12&media=music`;
+      const url = `/api/search?term=${encodeURIComponent(term)}`;
       const res = await fetch(url);
       const data = await res.json();
       setResults(data.results ?? []);

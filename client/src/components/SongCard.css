@@ -90,9 +90,23 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
+/* Truncate long artist names */
+.song-meta > .text-sm {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.song-duration { flex-shrink: 0; }
 .song-duration::before { content: '·'; margin-right: 4px; }
-.song-added { margin-top: 2px; }
+.song-added {
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .song-added-name { color: var(--primary); }
 
 /* Actions */

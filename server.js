@@ -3,6 +3,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
+const https = require('https');
 const db = require('./db');
 
 const PORT = process.env.PORT || 3001;
@@ -176,6 +177,21 @@ app.post('/api/rooms/:joinCode/songs/:songId/vote', (req, res) => {
   const result = db.vote(Number(req.params.songId), userId, voteType);
   broadcastSongs(room.join_code, userId);
   res.json({ ok: true, promoted: result.promoted });
+});
+
+// iTunes search proxy — avoids CORS failures on mobile browsers
+app.get('/api/search', (req, res) => {
+  const term = req.query.term;
+  if (!term) return res.json({ results: [] });
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=12&media=music`;
+  https.get(url, (apiRes) => {
+    let raw = '';
+    apiRes.on('data', chunk => { raw += chunk; });
+    apiRes.on('end', () => {
+      try { res.json(JSON.parse(raw)); }
+      catch { res.status(502).json({ results: [] }); }
+    });
+  }).on('error', () => res.status(502).json({ results: [] }));
 });
 
 // Fallback for client-side routing in production

@@ -60,6 +60,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.song-meta { margin-top: 1px; }
-.song-added { margin-top: 2px; }
+.song-meta {
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-added {
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .song-added-name { color: var(--primary); }
